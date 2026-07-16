@@ -8,11 +8,12 @@ shortcuts are synthesized, each button launches a real `codex` process.
 
 | File | Purpose |
 |---|---|
-| `arcade-fightstick.gamecontroller.amgp` | Profile for the flat arcade fightstick (current hardware) |
-| `agent-key.gamecontroller.amgp` | Profile for a standard SDL gamepad (original) |
+| `agent-key.gamecontroller.amgp` | Profile for the flat arcade fightstick (current hardware) |
 | `bin/codex-bridge.sh` | Gamepad→Codex bridge; one verb per control |
 | `install.sh` | Stamps the real script path into every profile |
 | `*.installed.gamecontroller.amgp` | Generated — load these into AntiMicroX |
+
+The original profile for a standard SDL gamepad is archived in `.vscode/` (gitignored, kept locally for reference).
 
 ## Setup
 
