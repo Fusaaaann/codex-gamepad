@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gamecontroller configversion="19" appversion="3.5.0">
+    <!--The SDL name for a joystick is included for informational purposes only.-->
+    <sdlname>Agent Key</sdlname>
+    <!--The GUID for a joystick is included for informational purposes only.-->
+    <guid>00000000000000000000000000000000</guid>
+    <!--
+      Agent Key -> Codex bridge profile.
+      Every control runs a DIRECT codex command via bin/codex-bridge.sh
+      (execute slots), not a keyboard shortcut. Edit BRIDGE below to point
+      at wherever you place the script.
+
+      Standard SDL gamepad -> Agent Key mapping:
+        left stick (4-way)   = joystick skill flicks
+        right stick (L/R)    = reasoning dial (down/up)
+        dpad up/down         = agent selector (prev/next)
+        trigger 2 (right)    = touch sensor push-to-talk (hold)
+        face + shoulders     = command keys
+    -->
+    <names/>
+    <sets>
+        <set index="1">
+            <!-- ============ LEFT STICK = skill flicks (4-way cardinal) ============ -->
+            <stick index="1">
+                <deadZone>10000</deadZone>
+                <mode>four-way</mode>
+                <!-- Up = review PR -->
+                <stickbutton index="1">
+                    <actionname>Skill flick up: review PR</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>review</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+                <!-- Right = refactor -->
+                <stickbutton index="3">
+                    <actionname>Skill flick right: refactor</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>refactor</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+                <!-- Down = debug -->
+                <stickbutton index="5">
+                    <actionname>Skill flick down: debug</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>debug</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+                <!-- Left = run tests -->
+                <stickbutton index="7">
+                    <actionname>Skill flick left: run tests</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>test</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+            </stick>
+
+            <!-- ============ RIGHT STICK L/R = reasoning dial ============ -->
+            <stick index="2">
+                <deadZone>12000</deadZone>
+                <mode>four-way</mode>
+                <!-- Right = reasoning up -->
+                <stickbutton index="3">
+                    <actionname>Dial: reasoning up</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>reason-up</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+                <!-- Left = reasoning down -->
+                <stickbutton index="7">
+                    <actionname>Dial: reasoning down</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>reason-down</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+            </stick>
+
+            <!-- ============ DPAD = agent selector ============ -->
+            <dpad index="1">
+                <dpadbutton index="1">
+                    <actionname>Agent selector: previous</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>agent-prev</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+                <dpadbutton index="4">
+                    <actionname>Agent selector: next</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>agent-next</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+                <dpadbutton index="2">
+                    <actionname>Expand / resize panel</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>expand</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+                <dpadbutton index="8">
+                    <actionname>Open docs</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>docs</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+            </dpad>
+
+            <!-- ============ TRIGGER 2 = touch sensor push-to-talk (hold) ============ -->
+            <trigger index="2">
+                <triggerbutton index="2">
+                    <actionname>Push-to-talk (hold)</actionname>
+                    <slots>
+                        <!-- fires on press -->
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>talk start</extra>
+                            <mode>execute</mode>
+                        </slot>
+                        <!-- release slot fires 'talk stop' when the trigger is let go -->
+                        <slot>
+                            <code>0</code>
+                            <mode>release</mode>
+                        </slot>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>talk stop</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </triggerbutton>
+            </trigger>
+
+            <!-- ============ LEFT TRIGGER = reject / interrupt ============ -->
+            <trigger index="1">
+                <triggerbutton index="2">
+                    <actionname>Cancel / reject</actionname>
+                    <slots>
+                        <slot>
+                            <code>BRIDGE</code>
+                            <extra>reject</extra>
+                            <mode>execute</mode>
+                        </slot>
+                    </slots>
+                </triggerbutton>
+            </trigger>
+
+            <!-- ============ FACE BUTTONS = core command keys ============ -->
+            <!-- A (index 1) = accept / apply -->
+            <button index="1">
+                <actionname>Accept / apply change</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>accept</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- B (index 2) = reject -->
+            <button index="2">
+                <actionname>Cancel / reject</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>reject</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- X (index 3) = edit / apply-with-edits -->
+            <button index="3">
+                <actionname>Edit / apply with edits</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>edit</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- Y (index 4) = ChatGPT / assistant -->
+            <button index="4">
+                <actionname>ChatGPT / assistant</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>chat</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- LB (index 5) = lightning skill: review PR -->
+            <button index="5">
+                <actionname>Lightning key: review PR</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>review</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- RB (index 6) = sparkle skill: refactor -->
+            <button index="6">
+                <actionname>Sparkle key: refactor</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>refactor</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- Back (index 7) = new chat -->
+            <button index="7">
+                <actionname>New chat / session</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>new</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- Start (index 8) = code / cloud run -->
+            <button index="8">
+                <actionname>Code / cloud run</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>code</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- Left stick click (index 9) = brain / reasoning boost -->
+            <button index="9">
+                <actionname>Brain: reasoning boost</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>reason-up</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- Right stick click (index 10) = cloud upload / push -->
+            <button index="10">
+                <actionname>Cloud upload / push</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>push</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+            <!-- Guide (index 11) = expand / resize -->
+            <button index="11">
+                <actionname>Expand / resize</actionname>
+                <slots>
+                    <slot>
+                        <code>BRIDGE</code>
+                        <extra>expand</extra>
+                        <mode>execute</mode>
+                    </slot>
+                </slots>
+            </button>
+        </set>
+    </sets>
+</gamecontroller>

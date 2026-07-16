@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gamecontroller configversion="19" appversion="3.5.0">
+    <!--The SDL name for a joystick is included for informational purposes only.-->
+    <sdlname>Arcade Fightstick (Agent Key layout)</sdlname>
+    <!--The GUID for a joystick is included for informational purposes only.-->
+    <guid>00000000000000000000000000000000</guid>
+    <!--
+      Agent Key -> Codex, recoded so COLOR = ACTION CATEGORY.
+
+        RED cluster (left)   = DECIDE / COMMIT    spend a decision; often irreversible
+        WHITE grid (right)   = INVOKE / NAVIGATE  fire a skill or move; safe to repeat
+        Big thumb button     = REJECT / INTERRUPT isolated, farthest from Accept
+        Knob                 = reasoning (rotate -/+)
+        Arcade stick         = navigation (dpad)
+
+      Why: the hardware already gives you a red/white split. Making red mean
+      "you're about to commit something" and white mean "you're just invoking"
+      lets the color you're looking at tell you the stakes before you press.
+
+      Every control runs a DIRECT codex command via bin/codex-bridge.sh
+      (execute slots), not a keyboard shortcut. Run install.sh to stamp paths.
+
+      PHYSICAL LAYOUT (from photo):
+        LEFT red:   b1 b2 b3 across top, b4 below, b5 = big thumb button
+        RIGHT white: b6  b7  b8  b9    (top row)
+                     b10 b11 b12 b13   (bottom row)
+      ADDED LATER:
+        Knob  -> buttons 14 / 15 = rotate- / rotate+
+        Stick -> dpad index 1    = nav up/down/left/right
+    -->
+    <names/>
+    <sets>
+        <set index="1">
+
+            <!-- RED = DECIDE / COMMIT. Reject on isolated thumb (b5), far from Accept (b1). -->
+            <button index="1">
+                <actionname>Commit: accept / apply change</actionname>
+                <slots><slot><code>BRIDGE</code><extra>accept</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="2">
+                <actionname>Commit: edit / apply with edits</actionname>
+                <slots><slot><code>BRIDGE</code><extra>edit</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="3">
+                <actionname>Commit: push (commit + push)</actionname>
+                <slots><slot><code>BRIDGE</code><extra>push</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="4">
+                <actionname>Commit: new session</actionname>
+                <slots><slot><code>BRIDGE</code><extra>new</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="5">
+                <actionname>Commit: reject / interrupt (isolated)</actionname>
+                <slots><slot><code>BRIDGE</code><extra>reject</extra><mode>execute</mode></slot></slots>
+            </button>
+
+            <!-- WHITE = INVOKE / NAVIGATE. Top row skills in workflow order. -->
+            <button index="6">
+                <actionname>Invoke: review PR</actionname>
+                <slots><slot><code>BRIDGE</code><extra>review</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="7">
+                <actionname>Invoke: run tests</actionname>
+                <slots><slot><code>BRIDGE</code><extra>test</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="8">
+                <actionname>Invoke: debug</actionname>
+                <slots><slot><code>BRIDGE</code><extra>debug</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="9">
+                <actionname>Invoke: refactor</actionname>
+                <slots><slot><code>BRIDGE</code><extra>refactor</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="10">
+                <actionname>Invoke: code / cloud run</actionname>
+                <slots><slot><code>BRIDGE</code><extra>code</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="11">
+                <actionname>Invoke: push-to-talk (hold)</actionname>
+                <slots>
+                    <slot><code>BRIDGE</code><extra>talk start</extra><mode>execute</mode></slot>
+                    <slot><code>0</code><mode>release</mode></slot>
+                    <slot><code>BRIDGE</code><extra>talk stop</extra><mode>execute</mode></slot>
+                </slots>
+            </button>
+            <button index="12">
+                <actionname>Navigate: ChatGPT / assistant</actionname>
+                <slots><slot><code>BRIDGE</code><extra>chat</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="13">
+                <actionname>Navigate: docs / reference</actionname>
+                <slots><slot><code>BRIDGE</code><extra>docs</extra><mode>execute</mode></slot></slots>
+            </button>
+
+            <!-- KNOB = reasoning (added later). CW/rotate+ = more; CCW/rotate- = less. -->
+            <button index="14">
+                <actionname>Knob rotate - (reasoning down)</actionname>
+                <slots><slot><code>BRIDGE</code><extra>rotate-</extra><mode>execute</mode></slot></slots>
+            </button>
+            <button index="15">
+                <actionname>Knob rotate + (reasoning up)</actionname>
+                <slots><slot><code>BRIDGE</code><extra>rotate+</extra><mode>execute</mode></slot></slots>
+            </button>
+
+            <!-- ARCADE STICK = navigation (added later). Digital lever = dpad. -->
+            <dpad index="1">
+                <dpadbutton index="1">
+                    <actionname>Nav up (prev agent)</actionname>
+                    <slots><slot><code>BRIDGE</code><extra>nav-up</extra><mode>execute</mode></slot></slots>
+                </dpadbutton>
+                <dpadbutton index="4">
+                    <actionname>Nav down (next agent)</actionname>
+                    <slots><slot><code>BRIDGE</code><extra>nav-down</extra><mode>execute</mode></slot></slots>
+                </dpadbutton>
+                <dpadbutton index="8">
+                    <actionname>Nav left</actionname>
+                    <slots><slot><code>BRIDGE</code><extra>nav-left</extra><mode>execute</mode></slot></slots>
+                </dpadbutton>
+                <dpadbutton index="2">
+                    <actionname>Nav right</actionname>
+                    <slots><slot><code>BRIDGE</code><extra>nav-right</extra><mode>execute</mode></slot></slots>
+                </dpadbutton>
+            </dpad>
+
+        </set>
+    </sets>
+</gamecontroller>
