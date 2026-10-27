@@ -1,0 +1,7 @@
+[
+  {"label": "Sol · xhigh", "model": "gpt-6.1-sol", "reasoning": "xhigh"},
+  {"label": "Sol · high", "model": "gpt-6.1-sol", "reasoning": "high"},
+  {"label": "Sol · medium", "model": "gpt-6.1-sol", "reasoning": "medium"},
+  {"label": "Luna · xhigh", "model": "gpt-6-luna", "reasoning": "xhigh"},
+  {"label": "Luna · high", "model": "gpt-6-luna", "reasoning": "high"}
+]

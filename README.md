@@ -1,114 +1,82 @@
-# Agent Key → Codex profile for AntiMicroX
+# Codex Model Knob
 
-Turns any SDL gamepad into the Work Louder × OpenAI **Agent Key**: every control
-runs a **direct Codex command** through a small bridge script — no keyboard
-shortcuts are synthesized, each button launches a real `codex` process.
+Select a Codex CLI model and reasoning effort with a VIA/QMK rotary encoder.
+The switcher follows the focused Codex terminal in Konsole or VS Code on X11,
+including terminals in VS Code editor groups.
 
-## Files
-
-| File | Purpose |
-|---|---|
-| `agent-key.gamecontroller.amgp` | Profile for the flat arcade fightstick (current hardware) |
-| `bin/codex-bridge.sh` | Gamepad→Codex bridge; one verb per control |
-| `install.sh` | Stamps the real script path into every profile |
-| `*.installed.gamecontroller.amgp` | Generated — load these into AntiMicroX |
-
-The original profile for a standard SDL gamepad is archived in `.vscode/` (gitignored, kept locally for reference).
+Turn to choose a preset. After 500 ms without rotation, the switcher applies the
+selection and confirms it with the local Codex daemon. The overlay shows the
+candidate without taking keyboard focus.
 
 ## Setup
 
+Requires Python 3 with Tk, an X11 desktop, and Codex CLI using its shared local
+daemon. The protocol was tested with Codex 0.164.0.
+
 ```bash
-./install.sh                     # writes agent-key.installed.gamecontroller.amgp
-export CODEX_WORKDIR=~/your/repo  # where agents run (per session)
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-knob.txt
 ```
 
-Then in AntiMicroX: pick your controller → Load → the installed `.amgp`.
+With the shared Codex daemon running, install the session title and startup hook:
 
-Override the Codex binary if needed: `export CODEX_BIN=/path/to/codex`.
-
-## Mapping — arcade fightstick (current hardware)
-
-Recoded so **color = action category**. The red/white split on the hardware now
-carries meaning: what you're looking at tells you the stakes before you press.
-
-- **RED = decide / commit** — spends a decision, often irreversible.
-- **WHITE = invoke / navigate** — fires a skill or moves; safe to repeat.
-
-Reject lives on the isolated big thumb button, as far from Accept as the board
-allows, so the two highest-stakes actions can't be confused by feel. The white
-skill row runs in workflow order: review → test → debug → refactor.
-
-```
- RED = decide            WHITE = invoke / navigate
- b1  b2  b3       b6  b7  b8  b9      <- skills, workflow order
-     b4           b10 b11 b12 b13     <- run / talk / chat / docs
-    [b5] reject
-
- knob: rotate- / rotate+     stick: nav up/down/left/right
+```bash
+.venv/bin/python install_startup.py
 ```
 
-| Control | Button | Category | Codex command |
-|---|---|---|---|
-| Accept / apply | b1 | commit | `accept` |
-| Edit | b2 | commit | `edit` |
-| Push (commit + push) | b3 | commit | `push` |
-| New session | b4 | commit | `new` |
-| Reject / interrupt | b5 (thumb) | commit | `reject` |
-| Review PR | b6 | invoke | `review` |
-| Run tests | b7 | invoke | `test` |
-| Debug | b8 | invoke | `debug` |
-| Refactor | b9 | invoke | `refactor` |
-| Code / cloud run | b10 | invoke | `code` |
-| Push-to-talk (hold) | b11 | invoke | `talk start` → `talk stop` |
-| ChatGPT | b12 | navigate | `chat` |
-| Docs | b13 | navigate | `docs` |
-| **Knob rotate −** | b14 | dial | `rotate-` (reasoning down) |
-| **Knob rotate +** | b15 | dial | `rotate+` (reasoning up) |
-| **Stick ↑ ↓ ← →** | dpad 1 | navigate | `nav-up` / `nav-down` / `nav-left` / `nav-right` |
+The installer backs up the existing configuration and preserves other hooks.
+Edit the two absolute paths in `codex-shell.sh` to match your checkout, then
+source it in the terminal's parent shell:
 
-The knob and stick rows are placeholders until the hardware arrives — press each
-in AntiMicroX to confirm its index (encoders emit two momentary buttons; the
-lever shows up as a dpad/hat) and re-drag if the numbers differ.
+```bash
+source /path/to/gamepad-codex/codex-shell.sh
+codex
+```
 
-## Mapping — standard SDL gamepad (original)
+VS Code also requires the local focus adapter:
 
-Original Agent Key layout mapped onto a gamepad with analog sticks.
+```bash
+python3 vscode-adapter/package-vsix.py
+code --install-extension vscode-adapter/gamepad-codex-focus-0.1.0.vsix
+```
 
-| Agent Key control | Gamepad input | Codex command |
-|---|---|---|
-| Joystick flick ↑ | Left stick up | `review` — review staged changes as a PR |
-| Joystick flick → | Left stick right | `refactor` — refactor open file |
-| Joystick flick ↓ | Left stick down | `debug` — reproduce + diagnose last error |
-| Joystick flick ← | Left stick left | `test` — run suite, fix until green |
-| Reasoning dial + | Right stick right | `reason-up` — step reasoning higher |
-| Reasoning dial − | Right stick left | `reason-down` — step reasoning lower |
-| Agent selector | D-pad ↑ / ↓ | `agent-prev` / `agent-next` |
-| Touch sensor | Right trigger (hold) | `talk start` on press, `talk stop` on release |
-| Lightning key | LB | `review` |
-| Sparkle key | RB | `refactor` |
-| Accept | A | `accept` — apply last change |
-| Reject | B / left trigger | `reject` — interrupt running action |
-| Edit | X | `edit` — apply with edits |
-| ChatGPT key | Y | `chat` — open assistant |
-| New chat | Back | `new` — new session |
-| Code / cloud run | Start | `code` — implement top TODO |
-| Brain boost | L3 | `reason-up` |
-| Cloud push | R3 | `push` — commit + push |
-| Expand / resize | Guide / D-pad → | `expand` |
-| Docs | D-pad ← | `docs` |
+See the [setup guide](docs/model-knob.md#automatic-session-binding) for shell
+startup configuration, explicit launcher commands, and troubleshooting.
 
-## How the bridge stays "direct"
+## Usage
 
-`codex-bridge.sh` calls `codex exec` with a concrete prompt and passes the
-dial's current reasoning level via `-c model_reasoning_effort=…`. `reject`
-sends `SIGINT` straight to the running `codex exec` process rather than faking
-Ctrl+C. Push-to-talk fires real start/stop verbs on press and release.
+Start the switcher from another terminal in the same desktop session:
 
-Run `bin/codex-bridge.sh help` to see every verb and the current dial value.
+```bash
+.venv/bin/python model-knob.py
+```
 
-## Customize
+Map encoder rotation to `KC_F13` / `KC_F14` in VIA and bind desktop shortcuts to
+`python3 /path/to/gamepad-codex/model-knob.py prev` / `next`. Optionally map the
+encoder press to `KC_F15` and the `cancel` command. Edit `model-presets.json` to
+change the ordered model/effort pairs.
 
-Edit the prompt strings in `codex-bridge.sh` to change what each control does,
-or point verbs at Work Louder helpers (`codex-session`, `codex-voice`) if you
-have them installed. The profile's `<actionname>` tags document each binding in
-the AntiMicroX UI.
+For preview without changing a session:
+
+```bash
+.venv/bin/python model-knob.py serve
+```
+
+Stop either mode with `python3 model-knob.py stop`. Live updates affect subsequent
+turns and do not start inference. Wayland, tmux/screen, remote terminals, and
+embedded Codex servers are outside automatic binding support.
+
+## Documentation
+
+- [Model knob setup and usage](docs/model-knob.md)
+- [Focus and session binding maintenance notes](docs/agent-notes/focus-binding.md)
+- [Desktop integration diagnostics](experiments/README.md)
+
+## Development
+
+```bash
+.venv/bin/python -m unittest discover -p 'test_*.py'
+```
+
+Tests use local Unix sockets and PTYs. Desktop integration checks and their
+additional dependencies are described in the diagnostics guide.

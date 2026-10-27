@@ -1,0 +1,12 @@
+{
+  "name": "gamepad-codex-focus",
+  "displayName": "Gamepad Codex Focus Adapter",
+  "description": "Reports window focus and active terminal process identity to the local Codex model switcher.",
+  "publisher": "local-gamepad",
+  "version": "0.1.0",
+  "engines": {"vscode": "^1.121.0"},
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "extensionKind": ["ui"],
+  "capabilities": {"untrustedWorkspaces": {"supported": true}}
+}
